@@ -30,10 +30,16 @@ public class Literature implements Serializable {
     private ArrayList<String> authors;
     @NotNull
     private String language;
+    @NotNull
+    private  String state;
+
 
     private ArrayList<String> editors;//编辑者
     private ArrayList<String> keywords;//关键字
     private String wholeText;//全文
+
+
+
     private String subject;//主题
     private String digest;//摘要
     private String source;//
@@ -44,6 +50,14 @@ public class Literature implements Serializable {
 
     @Null
     private ArrayList<String> files;//等等再收拾,要有一个文件名,一个路径
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
 
     public String getId() {
         return id;
