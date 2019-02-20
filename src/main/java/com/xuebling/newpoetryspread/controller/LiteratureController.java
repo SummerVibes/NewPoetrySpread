@@ -168,29 +168,29 @@ public class LiteratureController {
 
     }
 
-    @PostMapping(path = "testjson")
-    public Object  test2(@RequestBody JSONObject jsonParam){
-        System.out.println(jsonParam.toJSONString());
+        @PostMapping(path = "testjson")
+        public Object  test2(@RequestBody JSONObject jsonParam){
+            System.out.println(jsonParam.toJSONString());
 
-//         mongoTemplate.save(jsonParam,"test");
+    //         mongoTemplate.save(jsonParam,"test");
 
-        Query query = new Query(Criteria.where("_id").is("5c162cfe3281d941c89fc02e"));
-        DeleteResult result = mongoTemplate.remove(query, "test");
+            Query query = new Query(Criteria.where("_id").is("5c162cfe3281d941c89fc02e"));
+            DeleteResult result = mongoTemplate.remove(query, "test");
 
-//        Query query1 = new Query(Criteria.where("_id").is(1));
-//        DeleteResult result1 = mongoTemplate.remove(query1, "test");
-//
-//        result1.
-//        Query query2 = new Query(Criteria.where("_id").is(2));
-//        DeleteResult result2 = mongoTemplate.remove(query2, "test");
-
-
-
-        return new Response(ResponseMsg.SUCCESS);
+    //        Query query1 = new Query(Criteria.where("_id").is(1));
+    //        DeleteResult result1 = mongoTemplate.remove(query1, "test");
+    //
+    //        result1.
+    //        Query query2 = new Query(Criteria.where("_id").is(2));
+    //        DeleteResult result2 = mongoTemplate.remove(query2, "test");
 
 
 
-    }
+            return new Response(ResponseMsg.SUCCESS);
+
+
+
+        }
     //删除文献，修改文献状态为delete
     @DeleteMapping(path = "/delete")
     public Object DeleteLite(@RequestBody Literature literature, BindingResult bindingResult) {
