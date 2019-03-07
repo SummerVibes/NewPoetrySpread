@@ -1,0 +1,66 @@
+{
+  "checkers": {
+    "Checker": "com.xuebling.newpoetryspread.checkers.implement.Checker.class",
+    "StringChecker": "com.xuebling.newpoetryspread.checkers.implement.StringChecker.class",
+    "ListChecker": "com.xuebling.newpoetryspread.checkers.implement.ListChecker.class",
+    "OrderedListChecker": "com.xuebling.newpoetryspread.checkers.implement.OrderedListChecker.class",
+    "Title": {
+      "name": "标题",
+      "checker": "Checker",
+      "key": "title",
+      "necessary": true,
+      "childs": [
+        {
+          "name": "主标题",
+          "checker": "StringChecker",
+          "key": "maintitle",
+          "necessary": true,
+          "format": ""
+        },
+        {
+          "name": "副标题",
+          "checker": "StringChecker",
+          "key": "subtitle",
+          "necessary": false,
+          "format": ""
+        }
+      ]
+    },
+    "Authors": {
+      "name": "作者",
+      "checker": "OrderedListChecker",
+      "key": "authors",
+      "necessary": true,
+      "size": "0..n",
+      "orderby":"index",
+      "childs": [
+        {
+          "name": "姓名",
+          "checker": "StringChecker",
+          "key": "name",
+          "necessary": true,
+          "format": ""
+        },
+        {
+          "name": "序号",
+          "checker": "StringChecker",
+          "key": "index",
+          "necessary": true,
+          "format": ""
+        }
+      ]
+    }
+  },
+  "contents": {
+    "literature": [
+      "Title",
+      "Authors"
+    ],
+    "paper": {
+      "base": "literature",
+      "Title":"Title",
+      "checkers":["Title","Authors"]
+    },
+    "book": {}
+  }
+}

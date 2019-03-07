@@ -4,24 +4,29 @@ import javax.xml.transform.Result;
 
 public enum GetJsonObject {
 
-    ID("ID"),
-    MEDTYOE("medType"),
-    RESTYPE("resType"),
+
+    MEDIATYPE("mediaType"),
+    STUDYTYPE("studyType"),
+    DOCTYPE("docType"),
     ISTRANSLATED("isTranslated"),
     TITLE("title"),
     AUTHORS("authors"),
-    FILE("file"),
-    ACCESSORIESS("accessories"),
-    KEYWORDS("keywords"),
-    EDITORS("editors"),
-    DTPUBLIC("dtPublic"),
-    CREATIVETIME("creativetime"),
     LANGUAGE("language"),
-    PUBPLACE("pubPlace"),
-    CREATIVEPLACE("creativePlace"),
     STATE("state"),
+    TYPE("type"),
+    WHOLETEXT("wholeText")
+//    PUBPLACE("pubPlace"),
+//    CREATIVEPLACE("creativePlace"),
+//    FILE("file"),
+//    ACCESSORIESS("accessories"),
+//    KEYWORDS("keywords"),
+//    EDITORS("editors"),
+//    DTPUBLIC("dtPublic"),
+//    CREATIVETIME("creativetime"),
+
     ;
     private String keymessage;
+
     GetJsonObject(String keymessage){
         this.keymessage = keymessage;
     }

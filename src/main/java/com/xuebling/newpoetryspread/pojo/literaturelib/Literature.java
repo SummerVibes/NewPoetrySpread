@@ -1,5 +1,6 @@
 package com.xuebling.newpoetryspread.pojo.literaturelib;
 
+import com.xuebling.newpoetryspread.pojo.literaturelib.literature.Authors;
 import com.xuebling.newpoetryspread.pojo.literaturelib.literature.BasePlace;
 import com.xuebling.newpoetryspread.pojo.literaturelib.literature.BaseTime;
 import com.xuebling.newpoetryspread.pojo.literaturelib.literature.BaseType;
@@ -29,10 +30,13 @@ public class Literature implements Serializable {
     @NotNull
     private ArrayList<String> authors;
     @NotNull
+    private ArrayList<Authors> newauthors;
+    @NotNull
     private String language;
     @NotNull
     private  String state;
 
+    private String type;    //新增字段
 
     private ArrayList<String> editors;//编辑者
     private ArrayList<String> keywords;//关键字
@@ -50,6 +54,37 @@ public class Literature implements Serializable {
 
     @Null
     private ArrayList<String> files;//等等再收拾,要有一个文件名,一个路径
+
+    public Literature() { }
+
+    public Literature(@NotNull String mediaType, @NotNull BaseType studyType, @NotNull BaseType docType, @NotNull boolean isTranslated, @NotNull String title, @NotNull ArrayList<Authors> authors, @NotNull String language, @NotNull String state, String type, String wholeText) {
+        this.mediaType = mediaType;
+        this.studyType = studyType;
+        this.docType = docType;
+        this.isTranslated = isTranslated;
+        this.title = title;
+        this.newauthors = authors;
+        this.language = language;
+        this.state = state;
+        this.type = type;
+        this.wholeText = wholeText;
+    }
+
+    public ArrayList<Authors> getNewauthors() {
+        return newauthors;
+    }
+
+    public void setNewauthors(ArrayList<Authors> newauthors) {
+        this.newauthors = newauthors;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public String getState() {
         return state;
