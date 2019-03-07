@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="css/webuploader.css">
+    <script src="http://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+    <script type="text/javascript" src="js/webuploader.min.js"></script>
+</head>
+<body>
+<div id="uploader" class="wu-example">
+    <!--用来存放文件信息-->
+    <div id="thelist" class="uploader-list"></div>
+    <div class="btns">
+        <div id="picker">选择文件</div>
+        <button id="ctlBtn" class="btn btn-default">开始上传</button>
+    </div>
+</div>
+<script>
+    var $btn = $('#ctlBtn');
+    var $list = $('#thelist');
+    var chunkSize = 1024 * 1024;//5 * 1024 * 1024 5M
+    var taskId="";//获取到id之后绑定到这个变量上
+    var URL="http://127.0.0.1:8080/"
+    // HOOK 这个必须要再uploader实例化前面
+    WebUploader.Uploader.register({
+            'before-send-file': 'beforeSendFile',
+            'before-send': 'beforeSend'
+        },
+        {
+            //发送文件的整个过程之前,分块,拆分之前
+            beforeSendFile: function (file) {
+                console.log("File为", file);
+                console.log("beforeSendFile");
+                var task = new $.Deferred();
+                // 及时显示进度
+                uploader.md5File(file)
+                    .progress(function (percentage) {
+                        console.log('Percentage:', percentage);
+                    })
+                    // 完成
+                    .then(function (val) {
+                        file.md5 = val;
+                        console.log('完整文件的md5值:', val);
+                        var data = {
+                            fileName: file.name,
+                            fileSize: file.size,
+                            chunkSize: chunkSize,
+                            chunkNum: Math.ceil(file.size/chunkSize),
+                            sourceFileMD5: file.md5
+                        };
+                        // 进行md5判断
+                        $.ajax({
+                            url: URL+"file",
+                            type: "POST",
+                            contentType: "application/json; charset=utf-8",
+                            data: JSON.stringify(data),
+                            success: function (res) {
+                                console.log(res)
+                                // uploader.formData.taskId = res.data.taskId;
+                                file.taskId = res.data.taskId;
+                                // taskId = res.data.taskId;
+                                task.resolve();
+                            }
+                        })
+                    });
+                return $.when(task);
+            }
+        },
+        {
+            //发送文件之前,每次发送文件块都会调用
+            beforeSend: function (block) {//fixme 我有错 我总是不执行 这怎末办
+                console.log('为啥不执行呢');
+            }
+        })
+
+    // 实例化
+    var uploader = WebUploader.create({
+        pick: {
+            id: '#picker',
+            label: '点击选择文件'
+        },
+        formData: {
+            taskId: "",
+            chunkSize: chunkSize
+        },
+        swf: 'js/Uploader.swf',
+        chunked: true,
+        chunkSize: chunkSize, // 字节
+        threads: 3,
+        server: URL+'file/chunk',//url
+        auto: false,
+        // 禁掉全局的拖拽功能。这样不会出现图片拖进页面的时候，把图片打开。
+        disableGlobalDnd: true,
+        fileNumLimit: 1024,
+        fileSizeLimit: 1024 * 1024 * 1024,    // 200 M
+        fileSingleSizeLimit: 1024 * 1024 * 1024    // 50 M
+    });
+    // 当有文件被添加进队列的时候
+    uploader.on('fileQueued', function (file) {
+        $list.append('<div id="' + file.id + '" class="item">' +
+            '<h4 class="info">' + file.name + '</h4>' +
+            '<p class="state">等待上传...</p>' +
+            '</div>');
+    });
+    //当某个文件的分块在发送前触发，主要用来询问是否要添加附带参数，大文件在开起分片上传的前提下此事件可能会触发多次。
+    uploader.onUploadBeforeSend = function (obj, data) {
+        console.log("onUploadBeforeSend");
+        console.log(obj);
+        console.log(data);
+        data.taskId = obj.file.taskId;
+        // var file = obj.file;
+        // data.chunkMD5 = file.chunkMD5 || '';
+    };
+    // 文件上传
+    $btn.on('click', function () {
+        uploader.upload();
+    });
+    // 文件上传过程中创建进度条实时显示。
+    uploader.on('uploadProgress', function (file, percentage) {
+        var $li = $('#' + file.id),
+            $percent = $li.find('.progress .progress-bar');
+
+        // 避免重复创建
+        if (!$percent.length) {
+            $percent = $('<div class="progress progress-striped active">' +
+                '<div class="progress-bar" role="progressbar" style="width: 0%">' +
+                '</div>' +
+                '</div>').appendTo($li).find('.progress-bar');
+        }
+
+        $li.find('p.state').text('上传中');
+
+        $percent.css('width', percentage * 100 + '%');
+    });
+    uploader.on('uploadSuccess', function (file) {
+        $('#' + file.id).find('p.state').text('已上传');
+    });
+
+    uploader.on('uploadError', function (file) {
+        $('#' + file.id).find('p.state').text('上传出错');
+    });
+
+    uploader.on('uploadComplete', function (file) {
+        $('#' + file.id).find('.progress').fadeOut();
+    });
+</script>
+</body>
+</html>
